@@ -4,13 +4,15 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Steam Library</title>
-<link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <style>
 :root {
-  --bg-darker: #232a2e;
+  --bg-darker: #1e2326;
+  --bg-sidebar: #232a2e;
   --bg-main: #2d353b;
   --bg-panel: #343f44;
-  --border-color: #4f5b58;
+  --border-color: #3d484d;
   --text-primary: #d3c6aa;
   --text-muted: #859289;
   --steam-green: #a7c080;
@@ -24,6 +26,7 @@ body {
   color: var(--text-primary);
   font-size: 13px;
   height: 100vh;
+  display: flex;
   overflow: hidden;
 }
 
@@ -33,145 +36,169 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
   background: var(--bg-darker);
-  z-index: 9999999;
+  z-index: 9999;
 }
 #loader.hidden { display: none; }
 
-/* Library layout */
-.library-layout {
-  display: flex;
-  height: 100vh;
-  width: 100vw;
-}
-
-/* Sidebar List */
+/* Sidebar UI Layout */
 .sidebar {
-  width: 240px;
-  background: var(--bg-darker);
-  border-right: 2px solid var(--border-color);
+  width: 260px;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
 }
 
-.sidebar-header {
+.sidebar-search-container {
   padding: 10px;
-  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  gap: 6px;
 }
 
 #search {
-  width: 100%;
-  background: var(--bg-panel);
+  flex: 1;
+  background: var(--bg-darker);
   border: 1px solid var(--border-color);
   color: var(--text-primary);
-  padding: 6px;
+  padding: 6px 10px;
+  font-size: 12px;
   outline: none;
 }
 
-.game-list {
-  flex: 1;
-  overflow-y: auto;
-  padding: 5px 0;
+.sidebar-category {
+  padding: 10px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
 }
 
-.game-list-item {
-  padding: 6px 12px;
+.game-list-items {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.list-item {
+  padding: 6px 20px;
   cursor: pointer;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: var(--text-muted);
+  color: #b7c2b9;
+  font-size: 13px;
 }
-.game-list-item:hover, .game-list-item.active {
+.list-item:hover {
   background: var(--bg-panel);
-  color: var(--steam-green);
+  color: #fff;
 }
 
-/* Main Display Details Screen */
-.main-view {
+/* Main Shelf View UI */
+.main-dashboard {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  background: var(--bg-main);
-}
-
-.game-banner {
-  padding: 24px;
-  background: linear-gradient(180deg, var(--bg-panel) 0%, var(--bg-main) 100%);
-  border-bottom: 1px solid var(--border-color);
-  display: flex;
-  gap: 20px;
-  align-items: flex-end;
-}
-
-.game-banner-thumb {
-  width: 120px;
-  height: 120px;
-  object-fit: cover;
-  border: 1px solid var(--border-color);
-  background: var(--bg-darker);
-}
-
-.game-details h1 {
-  margin: 0 0 10px 0;
-  font-size: 24px;
-  color: #fff;
-}
-
-.play-btn {
-  background: #7a9452;
-  border: 1px solid var(--border-color);
-  color: #fff;
-  padding: 10px 30px;
-  font-weight: bold;
-  font-size: 16px;
-  cursor: pointer;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
-}
-.play-btn:hover {
-  background: var(--steam-green);
-  color: #232a2e;
-}
-
-.game-info-body {
-  padding: 20px;
   overflow-y: auto;
-  flex: 1;
+  padding: 20px 30px;
 }
 
-.error { color: #e67e80; margin: 10px 0; }
+.shelf-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 6px;
+}
+
+/* Recent shelf: landscape style layout */
+.recent-shelf {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 30px;
+}
+
+.recent-card {
+  background: var(--bg-sidebar);
+  border: 1px solid var(--border-color);
+  aspect-ratio: 16 / 9;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+/* All games shelf: poster card layout matching image grid */
+.grid-shelf {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 16px;
+}
+
+.grid-card {
+  background: var(--bg-sidebar);
+  border: 1px solid var(--border-color);
+  aspect-ratio: 2 / 3; /* Vertical alignment grid */
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s;
+}
+
+.grid-card:hover, .recent-card:hover {
+  transform: scale(1.02);
+  border-color: var(--steam-green);
+}
+
+.thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-title-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(35, 42, 46, 0.95);
+  padding: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 </style>
 </head>
 <body>
 
 <div id="loader">
-  <div style="font-size:18px; font-weight:600;" id="loaderText">Loading Chunks...</div>
+  <div style="color: var(--steam-green); font-weight: 600;">LOADING LIBRARY...</div>
 </div>
 
-<div class="library-layout">
-  <div class="sidebar">
-    <div class="sidebar-header">
-      <div style="font-weight:600; margin-bottom:6px; font-size:11px; text-transform:uppercase; color:var(--text-muted);">My Games (<span id="count">0</span>)</div>
-      <input id="search" placeholder="Search Library..." />
-    </div>
-    <div id="error" class="error" style="padding:10px;" hidden></div>
-    <div class="game-list" id="gameList"></div>
+<div class="sidebar">
+  <div class="sidebar-search-container">
+    <input id="search" placeholder="Search by name" />
   </div>
+  <div class="sidebar-category">
+    <span>Games (<span id="count">0</span>)</span>
+    <i class="fa-solid fa-chevron-down"></i>
+  </div>
+  <div class="game-list-items" id="sidebarList"></div>
+</div>
 
-  <div class="main-view" id="mainView" style="display: none;">
-    <div class="game-banner">
-      <div id="bannerThumbContainer"></div>
-      <div class="game-details">
-        <h1 id="selectedTitle">Select a Game</h1>
-        <button class="play-btn" id="launchBtn">LAUNCH GAME</button>
-      </div>
-    </div>
-    <div class="game-info-body">
-      <h3 style="color:var(--steam-green); border-bottom: 1px solid var(--border-color); padding-bottom:6px;">Application Details</h3>
-      <p style="color: var(--text-muted)">Ready to launch local environment parameters.</p>
-    </div>
-  </div>
+<div class="main-dashboard">
+  <div class="shelf-title">Recent Games</div>
+  <div class="recent-shelf" id="recentShelf"></div>
+
+  <div class="shelf-title">All Games</div>
+  <div class="grid-shelf" id="gridShelf"></div>
 </div>
 
 <script>
@@ -186,101 +213,87 @@ const GAME_PREFIX = "gmes/";
 const THUMB_PREFIX = "/";
 
 let games = [];
-let currentSelectedGame = null;
-
-const elList = document.getElementById("gameList");
-const elSearch = document.getElementById("search");
-const elCount = document.getElementById("count");
-const elError = document.getElementById("error");
-
-function showError(msg) {
-  elError.hidden = false;
-  elError.textContent = msg;
-}
 
 async function fetchJSON() {
   for (const base of BASES) {
     try {
       const res = await fetch(base + JSON_PATH);
-      if (!res.ok) continue;
-      return await res.json();
+      if (res.ok) return await res.json();
     } catch {}
   }
   throw new Error();
-}
-
-async function fetchGame(path) {
-  for (const base of BASES) {
-    try {
-      const res = await fetch(base + GAME_PREFIX + path);
-      if (!res.ok) continue;
-      return await res.text();
-    } catch {}
-  }
-  throw new Error();
-}
-
-function renderSidebar(data, q = "") {
-  const filtered = data.filter(g =>
-    (g.title + g.file_name).toLowerCase().includes(q.toLowerCase())
-  );
-
-  elList.innerHTML = filtered.map(g => `
-    <div class="game-list-item" data-path="${g.file_name}" data-title="${g.title}" data-thumb="${g.thumb}">
-      <i class="fa-solid fa-gamepad" style="margin-right:6px; opacity:0.5;"></i> ${g.title}
-    </div>
-  `).join("");
-
-  elCount.textContent = filtered.length;
-
-  document.querySelectorAll(".game-list-item").forEach(el => {
-    el.onclick = () => {
-      document.querySelectorAll(".game-list-item").forEach(i => i.classList.remove('active'));
-      el.classList.add('active');
-      selectGame(el.dataset.title, el.dataset.path, el.dataset.thumb);
-    };
-  });
-}
-
-function selectGame(title, path, thumb) {
-  currentSelectedGame = path;
-  document.getElementById("mainView").style.display = "flex";
-  document.getElementById("selectedTitle").textContent = title;
-  
-  const clean = thumb ? thumb.replace(/^\/+/, '') : '';
-  const imgUrl = clean ? (BASES[0] + THUMB_PREFIX + clean) : '';
-  
-  document.getElementById("bannerThumbContainer").innerHTML = imgUrl ? 
-    `<img class="game-banner-thumb" src="${imgUrl}">` : 
-    `<div class="game-banner-thumb" style="display:flex;align-items:center;justify-content:center;color:var(--text-muted)">No Image</div>`;
-
-  document.getElementById("launchBtn").onclick = () => loadGame(path);
 }
 
 async function loadGame(path) {
   try {
-    const html = await fetchGame(path);
-    const safe = html.replace(/<\/script>/gi, '</scr' + 'ipt>');
-    document.open();
-    document.write(safe);
-    document.close();
+    for (const base of BASES) {
+      try {
+        const res = await fetch(base + GAME_PREFIX + path);
+        if (!res.ok) continue;
+        const html = await res.text();
+        const safe = html.replace(/<\/script>/gi, '</scr' + 'ipt>');
+        document.open();
+        document.write(safe);
+        document.close();
+        return;
+      } catch {}
+    }
   } catch {
-    showError("Failed to load game.");
+    alert("Failed to load game.");
   }
 }
 
-elSearch.oninput = e => {
-  renderSidebar(games, e.target.value);
-};
+function buildImageUrl(path) {
+  if (!path) return "";
+  return BASES[0] + THUMB_PREFIX + path.replace(/^\/+/, '');
+}
+
+function render(data, q = "") {
+  const filtered = data.filter(g =>
+    (g.title + g.file_name).toLowerCase().includes(q.toLowerCase())
+  );
+
+  document.getElementById("count").textContent = filtered.length;
+
+  // Render Left Text Sidebar List
+  const elSidebar = document.getElementById("sidebarList");
+  elSidebar.innerHTML = filtered.map(g => `
+    <div class="list-item" data-path="${g.file_name}">${g.title}</div>
+  `).join("");
+
+  // Render Recent Shelf Layout (First 3 items)
+  const elRecent = document.getElementById("recentShelf");
+  elRecent.innerHTML = filtered.slice(0, 3).map(g => `
+    <div class="recent-card" data-path="${g.file_name}">
+      <img class="thumb-img" src="${buildImageUrl(g.thumb)}" onerror="this.style.display='none'">
+      <div class="card-title-overlay">${g.title}</div>
+    </div>
+  `).join("");
+
+  // Render Main Vertical Content Poster Grid Layout
+  const elGrid = document.getElementById("gridShelf");
+  elGrid.innerHTML = filtered.map(g => `
+    <div class="grid-card" data-path="${g.file_name}">
+      <img class="thumb-img" src="${buildImageUrl(g.thumb)}" onerror="this.style.display='none'">
+      <div class="card-title-overlay">${g.title}</div>
+    </div>
+  `).join("");
+
+  // Attach Action Events
+  document.querySelectorAll(".list-item, .recent-card, .grid-card").forEach(el => {
+    el.onclick = () => loadGame(el.dataset.path);
+  });
+}
+
+document.getElementById("search").oninput = e => render(games, e.target.value);
 
 (async () => {
   try {
     games = await fetchJSON();
-    renderSidebar(games);
+    render(games);
     document.getElementById("loader").classList.add("hidden");
   } catch {
-    showError("Failed to load games list.");
-    document.getElementById("loader").classList.add("hidden");
+    document.getElementById("loader").innerHTML = "<div style='color:red;'>Failed to populate client inventory.</div>";
   }
 })();
 </script>
