@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script>
-const DEFAULT_TITLE = "Steam Engine";
+const DEFAULT_TITLE = "Steam";
 
 function applySavedSettings(){
   const savedTitle = localStorage.getItem("z_title");
@@ -25,30 +25,7 @@ function applySavedSettings(){
 
   window.onbeforeunload = savedLeave === "true" ? () => true : null;
 }
-
 applySavedSettings();
-
-window.addEventListener("storage", e => {
-  if(e.key === "z_title"){
-    document.title = e.newValue && e.newValue.trim() ? e.newValue : DEFAULT_TITLE;
-  }
-
-  if(e.key === "z_icon"){
-    let icon = document.querySelector("link[rel='icon']");
-    if(!icon){
-      icon = document.createElement("link");
-      icon.rel = "icon";
-      document.head.appendChild(icon);
-    }
-    if(e.newValue && e.newValue.trim()){
-      icon.href = e.newValue;
-    }
-  }
-
-  if(e.key === "z_leave"){
-    window.onbeforeunload = e.newValue === "true" ? () => true : null;
-  }
-});
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -58,189 +35,100 @@ body{
   margin:0;
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color:#d3c6aa;
-  background-color:#2d353b;
+  background-color:#1e2326;
   overflow:hidden;
+  user-select: none;
 }
 
-/* Classic 2000s Steam Top Windows Style Header Bar */
-.steam-header {
-  background: #3a444a;
-  border-bottom: 2px solid #4f5b58;
-  padding: 4px 8px;
+/* Modern Steam Style Top Navigation Header */
+.steam-nav-header {
+  background: #232a2e;
+  border-bottom: 1px solid #2d353b;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 40px;
+  padding: 0 16px;
+  height: 48px;
   box-sizing: border-box;
 }
 
-.steam-menu {
+.nav-left {
   display: flex;
-  gap: 12px;
-  font-size: 13px;
+  align-items: center;
+  gap: 24px;
 }
 
-.steam-menu span {
+.nav-tabs {
+  display: flex;
+  gap: 16px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.nav-tabs span {
   color: #859289;
   cursor: pointer;
-}
-
-.steam-menu span:hover {
-  color: #a7c080;
-}
-
-.topbar{
-  display:flex;
-  gap:2px;
-  background:#232a2e;
-  padding:3px;
-  border: 1px solid #4f5b58;
-}
-
-.topbar button{
-  background:#343f44;
-  border:1px solid #4f5b58;
-  color:#d3c6aa;
-  cursor:pointer;
-  padding: 4px 14px;
-  font-size: 12px;
-  font-weight: 600;
   text-transform: uppercase;
+  padding: 14px 4px;
+  border-bottom: 3px solid transparent;
+  transition: color 0.2s;
 }
 
-.topbar button:hover{
-  background:#a7c080;
-  color:#2d353b;
-}
-
-#homeUI{
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:20px;
-  width: 400px;
-  background: #2b3339;
-  border: 2px solid #4f5b58;
-  padding: 30px;
-  box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
-}
-
-.title{
-  font-size:36px;
-  font-weight:700;
+.nav-tabs span:hover, .nav-tabs span.active {
   color: #a7c080;
-  letter-spacing:2px;
-  text-shadow: 1px 1px #1e2326;
 }
 
-.clock{
-  width:80px;
-  height:80px;
-  border-radius:50%;
-  border:2px solid #4f5b58;
-  position:relative;
-  background: #232a2e;
+.nav-tabs span.active {
+  border-bottom-color: #a7c080;
 }
 
-.hand{
-  position:absolute;
-  left:50%;
-  bottom:50%;
-  transform-origin:bottom;
-  transform:translateX(-50%);
-  background:#a7c080;
+.window-controls {
+  display: flex;
+  gap: 12px;
+  color: #859289;
+  font-size: 12px;
 }
 
-.hour{height:20px;width:2px;}
-.minute{height:28px;width:2px;opacity:0.8;}
-.second{height:34px;width:1px;color:#e67e80;}
-
-.search{
-  position:relative;
-  width:100%;
-}
-
-.search input{
-  width:100%;
-  padding: 8px 10px 8px 34px;
-  box-sizing: border-box;
-  border:1px solid #4f5b58;
-  background:#232a2e;
-  color:#d3c6aa;
-  font-size:13px;
-}
-
-.search i{
-  position:absolute;
-  left:12px;
-  top:50%;
-  transform:translateY(-50%);
-  font-size:13px;
-  color:#859289;
-  pointer-events:none;
-}
-
-#frameOverlay{
-  position:absolute;
-  top:40px;
-  left:0;
-  right:0;
-  bottom:0;
-  z-index:9999;
-  pointer-events:none;
+#mainViewport {
+  position: absolute;
+  top: 48px;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: #2d353b;
 }
 
-#frameOverlay iframe{
-  width:100%;
-  height:100%;
-  border:none;
-  background:transparent;
-  pointer-events:auto;
+#mainViewport iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
 }
 </style>
 </head>
-
 <body>
 
-<div class="steam-header">
-  <div class="steam-menu">
-    <span>Steam</span>
-    <span>View</span>
-    <span>Friends</span>
-    <span>Games</span>
-    <span>Help</span>
+<div class="steam-nav-header">
+  <div class="nav-left">
+    <div style="color: #a7c080; font-weight: 800; font-size: 18px; cursor: pointer;" onclick="loadPage('games.html')"><i class="fa-brands fa-steam"></i></div>
+    <div class="nav-tabs">
+      <span onclick="setActiveTab(this); loadPage('games.html')" class="active">Library</span>
+      <span onclick="setActiveTab(this); loadPage('apps.html')">Apps</span>
+      <span onclick="setActiveTab(this); window.open('https://discord.gg/cloudmoon','_blank')">Community</span>
+      <span onclick="setActiveTab(this); loadPage('settings.html')">Settings</span>
+    </div>
   </div>
-
-  <div class="topbar">
-    <button onclick="goHome()"><i class="fa-solid fa-house"></i> Library</button>
-    <button onclick="loadPage('games.html')"><i class="fa-solid fa-gamepad"></i> Games</button>
-    <button onclick="loadPage('apps.html')"><i class="fa-solid fa-box"></i> Apps</button>
-    <button onclick="window.open('https://discord.gg/cloudmoon','_blank')"><i class="fa-brands fa-discord"></i> Chat</button>
-    <button onclick="loadPage('settings.html')"><i class="fa-solid fa-gear"></i> Settings</button>
-  </div>
-</div>
-
-<div id="homeUI">
-  <div class="title">STEAM_ENGINE</div>
-
-  <div class="clock">
-    <div class="hand hour" id="h"></div>
-    <div class="hand minute" id="m"></div>
-    <div class="hand second" id="s"></div>
-  </div>
-
-  <div class="search">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <input id="searchBox" placeholder="Search internet client store...">
+  
+  <div class="window-controls">
+    <i class="fa-solid fa-minus"></i>
+    <i class="fa-regular fa-square"></i>
+    <i class="fa-solid fa-xmark"></i>
   </div>
 </div>
 
-<div id="frameOverlay"></div>
+<div id="mainViewport">
+  <iframe id="clientFrame" src="games.html"></iframe>
+</div>
 
 <script>
 const BASES=[
@@ -249,18 +137,10 @@ const BASES=[
   "https://raw.githack.com/Darkdragonzxs/zd-pages/main/"
 ];
 
-function updateClock(){
-  const n=new Date();
-  const h=n.getHours()%12;
-  const m=n.getMinutes();
-  const s=n.getSeconds();
-
-  document.getElementById("h").style.transform=`translateX(-50%) rotate(${h*30+m/2}deg)`;
-  document.getElementById("m").style.transform=`translateX(-50%) rotate(${m*6}deg)`;
-  document.getElementById("s").style.transform=`translateX(-50%) rotate(${s*6}deg)`;
+function setActiveTab(element) {
+  document.querySelectorAll('.nav-tabs span').forEach(tab => tab.classList.remove('active'));
+  element.classList.add('active');
 }
-setInterval(updateClock,1000);
-updateClock();
 
 function safe(h){
   return h.replace(/<\/script>/gi,'</scr'+'ipt>');
@@ -275,61 +155,10 @@ async function fetchPage(f){
   }
 }
 
-async function loadPage(f){
-  const html=safe(await fetchPage(f));
-  const blob=new Blob([html],{type:"text/html"});
-  openFrame(URL.createObjectURL(blob));
-}
-
-function openFrame(url){
-  document.getElementById("homeUI").style.display="none";
-  const container=document.getElementById("frameOverlay");
-  container.innerHTML="";
-  const iframe=document.createElement("iframe");
-  iframe.src=url;
-  container.appendChild(iframe);
-}
-
-function goHome(){
-  document.getElementById("frameOverlay").innerHTML="";
-  document.getElementById("homeUI").style.display="flex";
-}
-
-document.getElementById("searchBox").addEventListener("keydown",e=>{
-  if(e.key!=="Enter") return;
-
-  let v=e.target.value.trim();
-  if(!v) return;
-
-  let url=v.startsWith("http")
-    ? v
-    : "https://search.brave.com/search?q="+encodeURIComponent(v);
-
-  launchBrowser(url);
-});
-
-async function launchBrowser(target){
-  if(!/^(https?:\/\/|data:)/i.test(target)){
-    target = "https://html.duckduckgo.com/?q=" + encodeURIComponent(target);
+async function loadPage(f) {
+  if (f.endsWith('.html')) {
+    document.getElementById('clientFrame').src = f;
   }
-
-  let html = await fetch("https://cdn.jsdelivr.net/gh/darkdragonzxs/sandstone@latest/index.html")
-    .then(r => r.text());
-
-  html = html.replace(/<\/script>/gi, '</scr' + 'ipt>');
-
-  html = html.replace(
-    "</body>",
-    `<scr`+`ipt>
-history.replaceState({}, "", "#${target}");
-location.hash = "${target}";
-</scr`+`ipt></body>`
-  );
-
-  const blob = new Blob([html], { type: "text/html" });
-  const blobUrl = URL.createObjectURL(blob);
-
-  openFrame(blobUrl + "#" + target);
 }
 </script>
 </body>
