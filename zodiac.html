@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script>
-const DEFAULT_TITLE = "zodiac";
+const DEFAULT_TITLE = "Steam Engine";
 
 function applySavedSettings(){
   const savedTitle = localStorage.getItem("z_title");
@@ -49,46 +49,68 @@ window.addEventListener("storage", e => {
     window.onbeforeunload = e.newValue === "true" ? () => true : null;
   }
 });
-  </script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
 
 <style>
 body{
   margin:0;
-  font-family:Inter;
-  color:#e5e5e5;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color:#d3c6aa;
+  background-color:#2d353b;
   overflow:hidden;
 }
 
-#bg{
-  position:fixed;
-  inset:0;
-  z-index:-1;
+/* Classic 2000s Steam Top Windows Style Header Bar */
+.steam-header {
+  background: #3a444a;
+  border-bottom: 2px solid #4f5b58;
+  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 40px;
+  box-sizing: border-box;
+}
+
+.steam-menu {
+  display: flex;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.steam-menu span {
+  color: #859289;
+  cursor: pointer;
+}
+
+.steam-menu span:hover {
+  color: #a7c080;
 }
 
 .topbar{
-  position:fixed;
-  top:10px;
-  left:50%;
-  transform:translateX(-50%);
   display:flex;
-  gap:18px;
-  padding:10px 18px;
-  border-radius:999px;
-  background:rgba(0,0,0,0.4);
-  backdrop-filter:blur(10px);
-  z-index:999999999999;
+  gap:2px;
+  background:#232a2e;
+  padding:3px;
+  border: 1px solid #4f5b58;
 }
 
 .topbar button{
-  background:none;
-  border:none;
-  color:white;
+  background:#343f44;
+  border:1px solid #4f5b58;
+  color:#d3c6aa;
   cursor:pointer;
+  padding: 4px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.topbar button:hover{
+  background:#a7c080;
+  color:#2d353b;
 }
 
 #homeUI{
@@ -100,27 +122,28 @@ body{
   flex-direction:column;
   align-items:center;
   gap:20px;
-  opacity:0;
-  animation:fadeIn 0.6s ease forwards;
-}
-
-@keyframes fadeIn{
-  from{opacity:0;transform:translate(-50%,-60%);}
-  to{opacity:1;transform:translate(-50%,-50%);}
+  width: 400px;
+  background: #2b3339;
+  border: 2px solid #4f5b58;
+  padding: 30px;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
 }
 
 .title{
-  font-size:64px;
-  font-weight:800;
-  letter-spacing:10px;
+  font-size:36px;
+  font-weight:700;
+  color: #a7c080;
+  letter-spacing:2px;
+  text-shadow: 1px 1px #1e2326;
 }
 
 .clock{
   width:80px;
   height:80px;
   border-radius:50%;
-  border:2px solid rgba(255,255,255,0.2);
+  border:2px solid #4f5b58;
   position:relative;
+  background: #232a2e;
 }
 
 .hand{
@@ -129,35 +152,26 @@ body{
   bottom:50%;
   transform-origin:bottom;
   transform:translateX(-50%);
-  background:white;
+  background:#a7c080;
 }
 
 .hour{height:20px;width:2px;}
-.minute{height:28px;width:2px;opacity:0.7;}
-.second{height:34px;width:1px;opacity:0.4;}
+.minute{height:28px;width:2px;opacity:0.8;}
+.second{height:34px;width:1px;color:#e67e80;}
 
 .search{
   position:relative;
-  width:260px;
-  height:38px;
+  width:100%;
 }
 
 .search input{
-  position:absolute;
-  inset:0;
   width:100%;
-  height:100%;
-  border-radius:999px;
-  border:none;
-  background:rgba(0,0,0,0.45);
-  color:white;
-  text-align:center;
-  font-size:14px;
-}
-
-.search input::placeholder{
-  text-align:center;
-  color:rgba(255,255,255,0.7);
+  padding: 8px 10px 8px 34px;
+  box-sizing: border-box;
+  border:1px solid #4f5b58;
+  background:#232a2e;
+  color:#d3c6aa;
+  font-size:13px;
 }
 
 .search i{
@@ -166,15 +180,19 @@ body{
   top:50%;
   transform:translateY(-50%);
   font-size:13px;
-  opacity:0.7;
+  color:#859289;
   pointer-events:none;
 }
 
 #frameOverlay{
-  position:fixed;
-  inset:0;
+  position:absolute;
+  top:40px;
+  left:0;
+  right:0;
+  bottom:0;
   z-index:9999;
   pointer-events:none;
+  background: #2d353b;
 }
 
 #frameOverlay iframe{
@@ -189,18 +207,26 @@ body{
 
 <body>
 
-<div id="bg"></div>
+<div class="steam-header">
+  <div class="steam-menu">
+    <span>Steam</span>
+    <span>View</span>
+    <span>Friends</span>
+    <span>Games</span>
+    <span>Help</span>
+  </div>
 
-<div class="topbar">
-  <button onclick="goHome()"><i class="fa-solid fa-house"></i></button>
-  <button onclick="loadPage('games.html')"><i class="fa-solid fa-gamepad"></i></button>
-  <button onclick="loadPage('apps.html')"><i class="fa-solid fa-box"></i></button>
-  <button onclick="window.open('https://discord.gg/cloudmoon','_blank')"><i class="fa-brands fa-discord"></i></button>
-  <button onclick="loadPage('settings.html')"><i class="fa-solid fa-gear"></i></button>
+  <div class="topbar">
+    <button onclick="goHome()"><i class="fa-solid fa-house"></i> Library</button>
+    <button onclick="loadPage('games.html')"><i class="fa-solid fa-gamepad"></i> Games</button>
+    <button onclick="loadPage('apps.html')"><i class="fa-solid fa-box"></i> Apps</button>
+    <button onclick="window.open('https://discord.gg/cloudmoon','_blank')"><i class="fa-brands fa-discord"></i> Chat</button>
+    <button onclick="loadPage('settings.html')"><i class="fa-solid fa-gear"></i> Settings</button>
+  </div>
 </div>
 
 <div id="homeUI">
-  <div class="title">ZODIAC</div>
+  <div class="title">STEAM_ENGINE</div>
 
   <div class="clock">
     <div class="hand hour" id="h"></div>
@@ -210,7 +236,7 @@ body{
 
   <div class="search">
     <i class="fa-solid fa-magnifying-glass"></i>
-    <input id="searchBox" placeholder="search the web">
+    <input id="searchBox" placeholder="Search internet client store...">
   </div>
 </div>
 
@@ -222,14 +248,6 @@ const BASES=[
   "https://cdn.jsdelivr.net/gh/Darkdragonzxs/zd-pages@latest/",
   "https://raw.githack.com/Darkdragonzxs/zd-pages/main/"
 ];
-
-VANTA.FOG({
-  el:"#bg",
-  highlightColor:0x444444,
-  midtoneColor:0x222222,
-  lowlightColor:0x111111,
-  baseColor:0x000000
-});
 
 function updateClock(){
   const n=new Date();
@@ -314,28 +332,5 @@ location.hash = "${target}";
   openFrame(blobUrl + "#" + target);
 }
 </script>
-<script>
-window.addEventListener("storage", e => {
-  if(e.key === "z_title"){
-    document.title = e.newValue || "zodiac";
-  }
-
-  if(e.key === "z_icon"){
-    let link = document.querySelector("link[rel='icon']");
-    if(!link){
-      link = document.createElement("link");
-      link.rel = "icon";
-      document.head.appendChild(link);
-    }
-    link.href = e.newValue;
-  }
-
-  if(e.key === "z_leave"){
-    window.onbeforeunload = e.newValue === "true" ? () => true : null;
-  }
-});
-  </script>
-
 </body>
 </html>
-   
