@@ -2,20 +2,14 @@
 <html>
 <head>
 <meta charset="utf-8">
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
 <style>
-*{
-  box-sizing:border-box;
-}
-
+* { box-sizing:border-box; }
 body{
   margin:0;
-  font-family:Inter, sans-serif;
-  color:white;
-  background:transparent;
-
+  font-family:"Segoe UI", sans-serif;
+  color:#d3c6aa;
+  background:#2d353b;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -24,59 +18,60 @@ body{
 
 .container{
   width:100%;
-  max-width:420px;
-  padding:20px;
+  max-width:450px;
+  background: #232a2e;
+  border: 2px solid #4f5b58;
+  padding: 20px;
 }
 
 h2{
-  text-align:center;
-  margin-bottom:20px;
+  margin-top: 0;
+  margin-bottom: 20px;
   font-weight:600;
+  color: #fff;
+  border-bottom: 1px solid #4f5b58;
+  padding-bottom: 8px;
+  font-size: 16px;
 }
 
 .section{
   margin-bottom:16px;
-  padding:16px;
-  border-radius:14px;
-  background:rgba(0,0,0,0.45);
-  backdrop-filter:blur(16px);
-  border:1px solid rgba(255,255,255,0.08);
+  padding:14px;
+  background:#343f44;
+  border:1px solid #4f5b58;
 }
 
 .label{
-  font-size:14px;
-  opacity:.8;
+  font-size:12px;
+  font-weight: 600;
+  color: #a7c080;
+  text-transform: uppercase;
 }
 
 input{
   width:100%;
-  margin-top:10px;
-  padding:12px;
-  border:none;
-  border-radius:8px;
-  background:rgba(255,255,255,0.06);
-  color:white;
+  margin-top:8px;
+  padding:8px;
+  border:1px solid #4f5b58;
+  background:#232a2e;
+  color:#d3c6aa;
   outline:none;
-}
-
-input::placeholder{
-  color:rgba(255,255,255,0.4);
 }
 
 button{
   width:100%;
-  margin-top:10px;
-  padding:12px;
-  border:none;
-  border-radius:8px;
-  background:rgba(255,255,255,0.1);
+  margin-top:8px;
+  padding:8px;
+  border:1px solid #4f5b58;
+  background:#3d484d;
   color:white;
   cursor:pointer;
-  transition:.2s;
+  font-weight: 600;
 }
 
 button:hover{
-  background:rgba(255,255,255,0.18);
+  background:#a7c080;
+  color: #232a2e;
 }
 
 .toggle-row{
@@ -86,85 +81,67 @@ button:hover{
   margin-top:14px;
 }
 
-.switch{
-  position:relative;
-  width:46px;
-  height:26px;
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
 }
 
-.switch input{
-  opacity:0;
-  width:0;
-  height:0;
+.switch input { opacity: 0; width: 0; height: 0; }
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #232a2e;
+  border: 1px solid #4f5b58;
 }
 
-.slider{
-  position:absolute;
-  cursor:pointer;
-  top:0;
-  left:0;
-  right:0;
-  bottom:0;
-  background:rgba(255,255,255,0.2);
-  border-radius:30px;
-  transition:.25s;
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 2px;
+  bottom: 2px;
+  background-color: #859289;
 }
 
-.slider:before{
-  position:absolute;
-  content:"";
-  height:20px;
-  width:20px;
-  left:3px;
-  top:3px;
-  background:white;
-  border-radius:50%;
-  transition:.25s;
-}
-
-input:checked + .slider{
-  background:#363737;
-}
-
-input:checked + .slider:before{
-  transform:translateX(20px);
+input:checked + .slider { background-color: #4b564c; }
+input:checked + .slider:before {
+  transform: translateX(20px);
+  background-color: #a7c080;
 }
 </style>
 </head>
 
 <body>
-
 <div class="container">
+  <h2>Steam Client Settings</h2>
 
-<h2>Settings</h2>
+  <div class="section">
+    <div class="label">Client Hook Title</div>
+    <input id="title" placeholder="Steam Engine">
+    <button onclick="saveTitle()">Apply Target String</button>
+  </div>
 
-<div class="section">
-<div class="label">Title</div>
-<input id="title" placeholder="Google">
-<button onclick="saveTitle()">Apply</button>
-</div>
+  <div class="section">
+    <div class="label">Favicon URL Injection</div>
+    <input id="favicon" placeholder="https://google.com/favicon.ico">
+    <button onclick="saveFavicon()">Update Context Icon</button>
+  </div>
 
-<div class="section">
-<div class="label">Favicon</div>
-<input id="favicon" placeholder="https://google.com/favicon.ico">
-<button onclick="saveFavicon()">Apply</button>
-</div>
-
-<div class="section">
-
-<button onclick="openBlank()">Open in about:blank</button>
-
-<div class="toggle-row">
-<span>Leave Site query</span>
-
-<label class="switch">
-  <input type="checkbox" id="leaveToggle">
-  <span class="slider"></span>
-</label>
-
-</div>
-</div>
-
+  <div class="section">
+    <button onclick="openBlank()">Force Instance sandbox (about:blank)</button>
+    <div class="toggle-row">
+      <span style="font-size: 12px;">Enable Exit Query Safeguard</span>
+      <label class="switch">
+        <input type="checkbox" id="leaveToggle">
+        <span class="slider"></span>
+      </label>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -183,20 +160,14 @@ function saveFavicon(){
   let val = document.getElementById("favicon").value.trim();
   if(!val) return;
 
-  let url = val.startsWith("http")
-    ? val
-    : "https://favicon.nextdns.io/" + val;
-
+  let url = val.startsWith("http") ? val : "https://favicon.nextdns.io/" + val;
   localStorage.setItem("z_icon", url);
 }
 
 function openBlank(){
   const url = location.origin;
-
   const win = window.open("about:blank", "_blank");
-  win.document.write(`
-    <iframe src="${url}" style="border:none;width:100vw;height:100vh;"></iframe>
-  `);
+  win.document.write(`<iframe src="${url}" style="border:none;width:100vw;height:100vh;"></iframe>`);
 }
 
 document.getElementById("leaveToggle").onchange = e => {
@@ -209,6 +180,5 @@ document.getElementById("leaveToggle").onchange = e => {
   }
 };
 </script>
-
 </body>
 </html>
