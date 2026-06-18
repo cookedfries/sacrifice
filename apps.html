@@ -3,28 +3,28 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>zodiac</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-
+<title>Steam Library - Apps</title>
+<link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --panel: rgba(20,20,20,0.55);
-  --border: rgba(255,255,255,0.08);
-  --text: #e5e5e5;
-  --muted: #9a9a9a;
-  --error: #ff4d4d;
+  --bg-darker: #232a2e;
+  --bg-main: #2d353b;
+  --bg-panel: #343f44;
+  --border-color: #4f5b58;
+  --text-primary: #d3c6aa;
+  --text-muted: #859289;
+  --steam-green: #a7c080;
 }
 
 * { box-sizing: border-box; }
-
 body {
   margin: 0;
-  font-family: "Inter", system-ui, sans-serif;
-  background: transparent;
-  color: var(--text);
+  font-family: "Segoe UI", sans-serif;
+  background: var(--bg-main);
+  color: var(--text-primary);
   font-size: 13px;
-  backdrop-filter: blur(20px);
+  height: 100vh;
+  overflow: hidden;
 }
 
 #loader {
@@ -34,139 +34,117 @@ body {
   align-items: center;
   justify-content: center;
   flex-direction: column;
-
-  background: rgba(0,0,0,0.35);
-  backdrop-filter: blur(14px);
-
+  background: var(--bg-darker);
   z-index: 9999999;
-  transition: opacity .4s ease;
+}
+#loader.hidden { display: none; }
+
+.library-layout {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
 }
 
-#loader.hidden {
-  opacity: 0;
-  pointer-events: none;
+.sidebar {
+  width: 240px;
+  background: var(--bg-darker);
+  border-right: 2px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
 }
 
-.loader-title {
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 6px;
-}
-
-.loader-sub {
-  font-size: 13px;
-  color: var(--muted);
-}
-
-.wrap {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-h1 {
-  margin: 0 0 14px;
-  font-size: 22px;
-  font-weight: 600;
-}
-
-.toolbar {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 8px;
-  margin-bottom: 12px;
-}
+.sidebar-header { padding: 10px; border-bottom: 1px solid var(--border-color); }
 
 #search {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  color: var(--text);
-  border-radius: 8px;
-  padding: 10px 12px;
-  outline: none;
-  backdrop-filter: blur(10px);
-}
-
-.status {
-  color: var(--muted);
-  display: flex;
-  align-items: center;
-  font-size: 12px;
-}
-
-.error {
-  color: var(--error);
-  margin-bottom: 10px;
-}
-
-.cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-  gap: 14px;
-}
-
-.card {
-  position: relative;
-  aspect-ratio: 1 / 1;
-  border-radius: 16px;
-  overflow: hidden;
-  cursor: pointer;
-  border: 1px solid var(--border);
-  background: var(--panel);
-  backdrop-filter: blur(10px);
-}
-
-.thumb {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: filter 0.2s ease, transform 0.2s ease;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 6px;
+  outline: none;
 }
 
-.title {
-  position: absolute;
-  inset: 0;
+.game-list { flex: 1; overflow-y: auto; padding: 5px 0; }
+
+.game-list-item {
+  padding: 6px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-muted);
+}
+.game-list-item:hover, .game-list-item.active {
+  background: var(--bg-panel);
+  color: var(--steam-green);
+}
+
+.main-view { flex: 1; display: flex; flex-direction: column; background: var(--bg-main); }
+
+.game-banner {
+  padding: 24px;
+  background: linear-gradient(180deg, var(--bg-panel) 0%, var(--bg-main) 100%);
+  border-bottom: 1px solid var(--border-color);
   display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  font-weight: 500;
-  text-align: center;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  background: rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(6px);
+  gap: 20px;
+  align-items: flex-end;
 }
 
-.card:hover .thumb {
-  filter: blur(6px) brightness(0.7);
-  transform: scale(1.05);
+.game-banner-thumb {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border: 1px solid var(--border-color);
+  background: var(--bg-darker);
 }
 
-.card:hover .title {
-  opacity: 1;
+.game-details h1 { margin: 0 0 10px 0; font-size: 24px; color: #fff; }
+
+.play-btn {
+  background: #7a9452;
+  border: 1px solid var(--border-color);
+  color: #fff;
+  padding: 10px 30px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
 }
+.play-btn:hover { background: var(--steam-green); color: #232a2e; }
+
+.game-info-body { padding: 20px; overflow-y: auto; flex: 1; }
+.error { color: #e67e80; margin: 10px 0; }
 </style>
 </head>
-
 <body>
 
 <div id="loader">
-  <div class="loader-title">Loading</div>
-  <div class="loader-sub" id="loaderText">0 / 0 chunks loaded</div>
+  <div style="font-size:18px; font-weight:600;">Loading System Tools...</div>
 </div>
 
-<main class="wrap">
-  <h1>apps</h1>
-
-  <div class="toolbar">
-    <input id="search" placeholder="Search..." />
-    <div class="status"><span id="count">0</span></div>
+<div class="library-layout">
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div style="font-weight:600; margin-bottom:6px; font-size:11px; text-transform:uppercase; color:var(--text-muted);">Applications (<span id="count">0</span>)</div>
+      <input id="search" placeholder="Search Tools..." />
+    </div>
+    <div id="error" class="error" style="padding:10px;" hidden></div>
+    <div class="game-list" id="appList"></div>
   </div>
 
-  <div id="error" class="error" hidden></div>
-  <section id="cards" class="cards"></section>
-</main>
+  <div class="main-view" id="mainView" style="display: none;">
+    <div class="game-banner">
+      <div id="bannerThumbContainer"></div>
+      <div class="game-details">
+        <h1 id="selectedTitle">Select an Application</h1>
+        <button class="play-btn" id="launchBtn">RUN UTILITY</button>
+      </div>
+    </div>
+    <div class="game-info-body">
+      <h3 style="color:var(--steam-green); border-bottom: 1px solid var(--border-color); padding-bottom:6px;">Application Properties</h3>
+      <p style="color: var(--text-muted)">Ready to establish safe runtime configurations.</p>
+    </div>
+  </div>
+</div>
 
 <script>
 const BASES = [
@@ -180,7 +158,7 @@ const PREFIX = "/";
 
 let apps = [];
 
-const elCards = document.getElementById("cards");
+const elList = document.getElementById("appList");
 const elSearch = document.getElementById("search");
 const elCount = document.getElementById("count");
 const elError = document.getElementById("error");
@@ -212,112 +190,57 @@ async function fetchApp(path) {
   throw new Error();
 }
 
-function buildImage(path) {
-  if (!path) return "";
-  const clean = path.replace(/^\/+/, '');
-
-  return `
-    <img class="thumb"
-      src="${BASES[0] + PREFIX + clean}"
-      onerror="
-        if (!this.dataset.fallback) {
-          this.dataset.fallback = 1;
-          this.src='${BASES[1] + PREFIX + clean}';
-        } else if (this.dataset.fallback == 1) {
-          this.dataset.fallback = 2;
-          this.src='${BASES[2] + PREFIX + clean}';
-        }
-      "
-    >
-  `;
-}
-
-function render(data, q = "") {
+function renderSidebar(data, q = "") {
   const filtered = data.filter(a =>
     (a.title + (a.file_name || "")).toLowerCase().includes(q.toLowerCase())
   );
 
-  elCards.innerHTML = filtered.map(a => `
-    <div class="card" data-path="${a.file_name || ""}" data-website="${a.website || ""}">
-      ${buildImage(a.thumb)}
-      <div class="title">${a.title}</div>
+  elList.innerHTML = filtered.map(a => `
+    <div class="game-list-item" data-path="${a.file_name || ""}" data-website="${a.website || ""}" data-title="${a.title}" data-thumb="${a.thumb}">
+       <i class="fa-solid fa-box" style="margin-right:6px; opacity:0.5;"></i> ${a.title}
     </div>
   `).join("");
 
   elCount.textContent = filtered.length;
 
-  document.querySelectorAll(".card").forEach(el => {
+  document.querySelectorAll(".game-list-item").forEach(el => {
     el.onclick = () => {
-      const website = el.dataset.website;
-      const path = el.dataset.path;
-
-      if (website) {
-        launchWebsite(website);
-      } else if (path) {
-        loadApp(path);
-      }
+      document.querySelectorAll(".game-list-item").forEach(i => i.classList.remove('active'));
+      el.classList.add('active');
+      selectApp(el.dataset.title, el.dataset.path, el.dataset.website, el.dataset.thumb);
     };
   });
-
-  setTimeout(trackImages, 0);
 }
 
-function trackImages(){
-  const imgs = [...document.querySelectorAll(".thumb")];
-  const total = imgs.length;
-  let loaded = 0;
+function selectApp(title, path, website, thumb) {
+  document.getElementById("mainView").style.display = "flex";
+  document.getElementById("selectedTitle").textContent = title;
+  
+  const clean = thumb ? thumb.replace(/^\/+/, '') : '';
+  const imgUrl = clean ? (BASES[0] + PREFIX + clean) : '';
+  
+  document.getElementById("bannerThumbContainer").innerHTML = imgUrl ? 
+    `<img class="game-banner-thumb" src="${imgUrl}">` : 
+    `<div class="game-banner-thumb" style="display:flex;align-items:center;justify-content:center;color:var(--text-muted)">No Image</div>`;
 
-  const loader = document.getElementById("loader");
-  const text = document.getElementById("loaderText");
-
-  if(total === 0){
-    loader.classList.add("hidden");
-    return;
-  }
-
-  function update(){
-    loaded++;
-    text.textContent = `${loaded} / ${total} chunks loaded`;
-
-    if(loaded >= total){
-      setTimeout(() => {
-        loader.classList.add("hidden");
-      }, 300);
+  document.getElementById("launchBtn").onclick = () => {
+    if (website) {
+      launchWebsite(website);
+    } else if (path) {
+      loadApp(path);
     }
-  }
-
-  imgs.forEach(img => {
-    if(img.complete){
-      update();
-    } else {
-      img.onload = update;
-      img.onerror = update;
-    }
-  });
+  };
 }
 
 async function launchWebsite(target) {
   if(!/^(https?:\/\/|data:)/i.test(target)){
     target = "https://search.brave.com/search?q=" + encodeURIComponent(target);
   }
-
-  let html = await fetch("https://cdn.jsdelivr.net/gh/darkdragonzxs/sandstone@latest/index.html")
-    .then(r => r.text());
-
+  let html = await fetch("https://cdn.jsdelivr.net/gh/darkdragonzxs/sandstone@latest/index.html").then(r => r.text());
   html = html.replace(/<\/script>/gi, '</scr' + 'ipt>');
-
-  html = html.replace(
-    "</body>",
-    `<scr`+`ipt>
-history.replaceState({}, "", "?url=${target}");
-location.search = "?url=${target}";
-</scr`+`ipt></body>`
-  );
-
+  html = html.replace("</body>", `<scr`+`ipt>history.replaceState({}, "", "?url=${target}");location.search = "?url=${target}";</scr`+`ipt></body>`);
   const blob = new Blob([html], { type: "text/html" });
-  const blobUrl = URL.createObjectURL(blob);
-
-  location.href = blobUrl + "?url=" + target;
+  location.href = URL.createObjectURL(blob) + "?url=" + target;
 }
 
 async function loadApp(path) {
@@ -331,17 +254,18 @@ async function loadApp(path) {
   }
 }
 
-elSearch.oninput = e => render(apps, e.target.value);
+elSearch.oninput = e => renderSidebar(apps, e.target.value);
 
 (async () => {
   try {
     apps = await fetchJSON();
-    render(apps);
+    renderSidebar(apps);
+    document.getElementById("loader").classList.add("hidden");
   } catch {
     showError("Failed to load apps list.");
+    document.getElementById("loader").classList.add("hidden");
   }
 })();
 </script>
-
 </body>
 </html>
